@@ -1,0 +1,6 @@
+# dependencies
+/node_modules
+
+#sensitive info
+config.env
+.env
