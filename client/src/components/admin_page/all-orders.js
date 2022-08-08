@@ -7,7 +7,7 @@ export default function AllOrders(props) {
     const findOrders = (e) => {
         e.preventDefault();
 
-        fetch(`http://localhost:8080/find-orders-by-date/${e.target.value}`, {
+        fetch(`https://sunflower-washateria-test.herokuapp.com/find-orders-by-date/${e.target.value}`, {
             method: "GET"
         })
         .then((response) => { return response.json() })

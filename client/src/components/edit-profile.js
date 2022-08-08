@@ -10,6 +10,7 @@ export default function EditProfile(props) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [passwordState, setPasswordState] = useState("password");
+    const [submitEnabled, setSubmitEnabled] = useState(true);
 
     const togglePasswordState = (e) => {
         if (passwordState == "password") {
@@ -24,27 +25,32 @@ export default function EditProfile(props) {
 
     const updateProfile = (e) => {
         e.preventDefault();
+        
+        if (submitEnabled) {
+            submitEnabled(false);
 
-        fetch(`http://localhost:8080/update-profile`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                firstName,
-                lastName,
-                email,
-                phoneNumber,
-                username,
-                password,
-                oldUsername: props.token[4]
+            fetch(`https://sunflower-washateria-test.herokuapp.com/update-profile`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    email,
+                    phoneNumber,
+                    username,
+                    password,
+                    oldUsername: props.token[4]
+                })
             })
-        })
-        .then((response) => { 
-            props.setToken({token: [firstName, lastName, email, phoneNumber, username, "user"]});
-            alert("profile successfully updated!");
-        })
-        .catch((error) => { console.log(error) });
+            .then((response) => { 
+                props.setToken({token: [firstName, lastName, email, phoneNumber, username, "user"]});
+                alert("profile successfully updated!");
+                setSubmitEnabled(true);
+            })
+            .catch((error) => { console.log(error) });
+        }
     }
 
     if (props.token) {

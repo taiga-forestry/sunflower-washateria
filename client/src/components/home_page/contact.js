@@ -5,23 +5,28 @@ export default function Contact() {
     const [email, setEmail] = useState();
     const [phone, setPhone] = useState();
     const [message, setMessage] = useState();
+    const [submitEnabled, setSubmitEnabled] = useState(true);
 
     const sendMessage = (e) => {
         e.preventDefault();
 
         // validate form input
+        if (submitEnabled) {
+            setSubmitEnabled(false);
 
-        fetch(`http://localhost:8080/send-contact-message`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({name, email, phone, message})
-        })
-        .then((response) => { 
-            alert("message sent!");
-        })
-        .catch((error) => { console.log(error) });
+            fetch(`https://sunflower-washateria-test.herokuapp.com/send-contact-message`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({name, email, phone, message})
+            })
+            .then((response) => { 
+                alert("message sent!");
+                setSubmitEnabled(true);
+            })
+            .catch((error) => { console.log(error) });
+        }
     }
 
     return (

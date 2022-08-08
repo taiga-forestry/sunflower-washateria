@@ -5,10 +5,8 @@ import convertTime from "../../utilities/convert-time.js";
 
 export default function OrderHistory(props) {
     useEffect(() => {
-        console.log("triggered");
-        
         if (props.token) {
-            fetch(`http://localhost:8080/check-username/${props.token[4]}`, {
+            fetch(`https://sunflower-washateria-test.herokuapp.com/check-username/${props.token[4]}`, {
                 method: "GET"
             })
             .then((response) => { return response.json() })

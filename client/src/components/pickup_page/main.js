@@ -6,7 +6,7 @@ export default function Main(props) {
 
     useEffect(() => {
         console.log("TRIGGERED");
-        fetch(`http://localhost:8080/get-zipcodes`, {
+        fetch(`https://sunflower-washateria-test.herokuapp.com/get-zipcodes`, {
             method: "GET"
         })
         .then((response) => { return response.json() })
@@ -37,6 +37,7 @@ function Order(props) {
     const [city, setCity] = useState();
     const [state, setState] = useState();
     const [zipcode, setZipcode] = useState();
+    const [submitEnabled, setSubmitEnabled] = useState(true);
     const navigate = useNavigate();
 
     const placeOrder = (e) => {
@@ -50,10 +51,11 @@ function Order(props) {
             console.log(zipcode);
             alert("sorry, we currently do not serve your location -- check back another date!");
         }
-        else {
+        else if (submitEnabled) {
+            setSubmitEnabled(false);
             let address = street.concat(", ", city, ", ", state, ", ", zipcode);
 
-            fetch(`http://localhost:8080/place-order`, {
+            fetch(`https://sunflower-washateria-test.herokuapp.com/place-order`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -72,14 +74,15 @@ function Order(props) {
             .then((response) => {
                 updateUserHistory();
                 alert(`order placed successfully! you can view your orders by clicking "view orders" in profile`);
-                navigate("/"); 
+                setSubmitEnabled(true);
+                navigate("/");
             })
             .catch((error) => { console.log(error) });
         }
     }
 
     const updateUserHistory = () => {
-        fetch(`http://localhost:8080/check-username/${props.token[4]}`, {
+        fetch(`https://sunflower-washateria-test.herokuapp.com/check-username/${props.token[4]}`, {
             method: "GET"
         })
         .then((response) => { return response.json() })
@@ -87,7 +90,7 @@ function Order(props) {
             let oldHistory = data.orderHistory;
             let address = street.concat(", ", city, ", ", state, ", ", zipcode);
 
-            fetch(`http://localhost:8080/update-history`, {
+            fetch(`https://sunflower-washateria-test.herokuapp.com/update-history`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"

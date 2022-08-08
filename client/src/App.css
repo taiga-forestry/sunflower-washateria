@@ -241,7 +241,7 @@ footer > p > a {
     min-height: 600px; /* */
     margin-top: var(--nav-height);
     justify-content: center;
-    background: url("./assets/testt.jpeg");
+    background: url("./assets/testtt.png");
     background-size: cover;
     background-position: center center;
     transition: opacity 0.1s linear, filter 0.1s linear;
@@ -616,6 +616,7 @@ section {
     transition: opacity 0.1s linear;
 }
 #authentication-modal.hidden {
+    /* top: -10px; */
     opacity: 0;
     z-index: -10;
     pointer-events: none;
@@ -796,11 +797,12 @@ section {
     border: 1px solid black;
     border-radius: 10px;
     opacity: 1;
-    transition: opacity 0.1s linear;
+    transition: all 0.15s linear;
 }
 #profile-modal.hidden {
     opacity: 0;
     z-index: -10;
+    right: calc(-1 * var(--profile-modal-width));
     pointer-events: none;
 }
 #profile-modal-content {

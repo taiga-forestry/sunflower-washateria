@@ -5,6 +5,7 @@ export default function Login(props) {
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
     const [passwordState, setPasswordState] = useState("password");
+    const [submitEnabled, setSubmitEnabled] = useState(true);
 
     const togglePasswordState = (e) => {
         if (passwordState == "password") {
@@ -20,28 +21,34 @@ export default function Login(props) {
     const validateCredentials = (e) => {
         e.preventDefault();
 
-        fetch(`http://localhost:8080/check-username/${username}`, {
-            method: "GET"
-        })
-        .then((response) => { return response.json() })
-        .then(async (data) => { 
-            if (data == null) {
-                alert("no matching username found");            
-            } 
-            else {
-                let hashedPassword = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password));
+        if (submitEnabled) {
+            setSubmitEnabled(false);
 
-                if (hashedPassword == data.password) {
-                    props.setToken({token: [data.firstName, data.lastName, data.email, data.phoneNumber, data.username, data.permissions]})
-                    alert("login successful! now redirecting to home page");
-                    props.loggedIn();
-                }
+            fetch(`https://sunflower-washateria-test.herokuapp.com/check-username/${username}`, {
+                method: "GET"
+            })
+            .then((response) => { return response.json() })
+            .then((data) => { 
+                if (data == null) {
+                    alert("no matching username found");            
+                } 
                 else {
-                    alert("password is incorrect try again");      
+                    let hashedPassword = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password));
+
+                    if (hashedPassword == data.password) {
+                        props.setToken({token: [data.firstName, data.lastName, data.email, data.phoneNumber, data.username, data.permissions]})
+                        alert("login successful! now redirecting to home page");
+                        props.loggedIn();
+                    }
+                    else {
+                        alert("password is incorrect try again");      
+                    }
                 }
-            }
-        })
-        .catch((error) => { console.log(error) });
+
+                setSubmitEnabled(true);
+            })
+            .catch((error) => { console.log(error) });
+        }
     }
 
     return (

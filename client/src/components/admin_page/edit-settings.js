@@ -6,12 +6,13 @@ export default function EditSettings(props) {
     const [zipcode, setZipcode] = useState();
     const [allZipcodes, setAllZipcodes] = useState();
     const [updated, setUpdated] = useState(false);
+    const [submitEnabled, setSubmitEnabled] = useState(true);
 
     useEffect(() => {
         if (!updated) {
             console.log("triggered rerender");
 
-            fetch(`http://localhost:8080/get-zipcodes`, {
+            fetch(`https://sunflower-washateria-test.herokuapp.com/get-zipcodes`, {
                 method: "GET"
             })
             .then((response) => { return response.json() })
@@ -40,37 +41,43 @@ export default function EditSettings(props) {
     const addZipcode = (e) => {
         e.preventDefault(); 
         
-        fetch(`http://localhost:8080/get-zipcodes`, {
-            method: "GET"
-        })
-        .then((response) => { return response.json() })
-        .then((data) => { 
-            let contains = false;
+        if (submitEnabled) {
+            setSubmitEnabled(false);
 
-            for (let zip of data) {
-                contains = contains || zip.zipcode == zipcode;
-            }
+            fetch(`https://sunflower-washateria-test.herokuapp.com/get-zipcodes`, {
+                method: "GET"
+            })
+            .then((response) => { return response.json() })
+            .then((data) => { 
+                let contains = false;
+    
+                for (let zip of data) {
+                    contains = contains || zip.zipcode == zipcode;
+                }
+    
+                if (!contains) {
+                    fetch(`https://sunflower-washateria-test.herokuapp.com/add-zipcode`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({zipcode})
+                    })
+                    .then((response) => { setUpdated(false) })
+                    .catch((error) => { console.log(error) }) 
+                }
+                else {
+                    alert("zipcode is already in the database!");
+                }
 
-            if (!contains) {
-                fetch(`http://localhost:8080/add-zipcode`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({zipcode})
-                })
-                .then((response) => { setUpdated(false) })
-                .catch((error) => { console.log(error) }) 
-            }
-            else {
-                alert("zipcode is already in the database!");
-            }
-        })
-        .catch((error) => { console.log(error) })
+                setSubmitEnabled(true);
+            })
+            .catch((error) => { console.log(error) })
+        }
     }
 
     const deleteZipcode = (zipcode) => {
-        fetch(`http://localhost:8080/delete-zipcode`, {
+        fetch(`https://sunflower-washateria-test.herokuapp.com/delete-zipcode`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"

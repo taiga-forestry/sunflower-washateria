@@ -8,6 +8,7 @@ export default function Register(props) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [passwordState, setPasswordState] = useState("password");
+    const [submitEnabled, setSubmitEnabled] = useState(true);
 
     const togglePasswordState = (e) => {
         if (passwordState == "password") {
@@ -65,38 +66,31 @@ export default function Register(props) {
 
     const validateCredentials = (e) => {
         e.preventDefault();
-        // validatePhone();
 
-        // if (validateEmail) {
+        if (submitEnabled) {
+            setSubmitEnabled(false);
 
-        // }
-        // if (validatePhone()) {
-
-        // }
-
-        // if (false) {
-
-        // }
-        // else {
-        fetch(`http://localhost:8080/check-username/${username}`, {
-            method: "GET"
-        })
-        .then((response) => { return response.json() })
-        .then((data) => { 
-            // if username is not taken already
-            if (data == null) {
-                registerUser();
-            } 
-            else {
-                alert("username taken! try again, or click forgot password");
-            }
-        })
-        .catch((error) => { console.log(error) });
-        // }
+            fetch(`https://sunflower-washateria-test.herokuapp.com/check-username/${username}`, {
+                method: "GET"
+            })
+            .then((response) => { return response.json() })
+            .then((data) => { 
+                // if username is not taken already
+                if (data == null) {
+                    registerUser();
+                } 
+                else {
+                    alert("username taken! try again, or click forgot password");
+                }
+                
+                setSubmitEnabled(true);
+            })
+            .catch((error) => { console.log(error) });
+        }
     }
 
     const registerUser = () => {
-        fetch(`http://localhost:8080/register-user`, {
+        fetch(`https://sunflower-washateria-test.herokuapp.com/register-user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
