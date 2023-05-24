@@ -5,3 +5,5 @@ includes a responsive UI, a custom-created user account system with login and re
 schedule orders for pickup and delivery laundry services, and an automated email contact form using nodemailer. 
 
 View the site live at https://sunflower-washateria.netlify.app/! Note that some details are not yet finalized, such as the FAQs, since I am still waiting for further directions on what to fill the section with.
+
+EDIT: The back-end is no longer functional, as it was previously hosted on Heroku's free plan which has now been discontinued.
